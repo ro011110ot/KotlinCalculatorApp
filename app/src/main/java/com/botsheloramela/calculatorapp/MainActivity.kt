@@ -128,13 +128,8 @@ fun solveExpression(expression: String): String {
         else result.toString().takeIf { it != "NaN" } ?: "Error"
 }
 
-fun delCharacter(expression: String): String {
-    return if (expression.isNotEmpty()) {
-        expression.dropLast(1)
-    } else {
-        expression
-    }
-}
+fun delCharacter(expression: String): String = if (expression.isNotEmpty()) expression.dropLast(1) else expression
+
 
 @Composable
 fun CalculatorButton(
