@@ -119,7 +119,7 @@ fun solveExpression(expression: String): String {
     val modifiedExpression = expression
         .replace("×", "*")
         .replace("÷", "/")
-        .replace("%", "#")
+        .replace("%", "%")
 
     val result = Expression(modifiedExpression).calculate()
 
