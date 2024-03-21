@@ -15,7 +15,7 @@ KotlinCalculatorApp is a simple calculator application I developed using Kotlin 
 - **Percentage Calculation:** Quickly calculate percentages for various purposes.
 - **Clear and Delete Functionality:** Clear the input or delete the last character with the provided buttons.
 - **Error Handling:** Proper error handling ensures smooth user experience even with complex expressions.
-- **Unit tests:** Init tests to ensure the correctness of calculation functions.
+- **Unit tests:** Unit tests to ensure the correctness of calculation functions.
 - **UI/Integrated tests:** Integrated tests to validate the user interface and integration of components.
 
 ## Code Design
