@@ -81,7 +81,7 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
 
         Column (modifier = Modifier.weight(1f).padding(16.dp)) {
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("expression_input"),
                 text = expression,
                 maxLines = 3,
                 style = TextStyle(fontSize = 48.sp,
