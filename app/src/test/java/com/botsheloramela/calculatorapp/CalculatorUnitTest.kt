@@ -47,6 +47,13 @@ class CalculatorUnitTest {
     }
 
     @Test
+    fun `test expression with percentage and modulo`() {
+        val expression = "20%4"
+        val expected = "0"
+        assertEquals(expected, solveExpression(expression))
+    }
+
+    @Test
     fun `test expression with invalid input`() {
         val expression = "10/0"
         val expected = "Error"

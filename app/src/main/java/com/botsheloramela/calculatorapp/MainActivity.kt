@@ -120,9 +120,15 @@ fun solveExpression(expression: String): String {
     val modifiedExpression = expression
         .replace("×", "*")
         .replace("÷", "/")
-        .replace("%", "%")
 
-    val result = Expression(modifiedExpression).calculate()
+    val result = when {
+        expression.endsWith('%') -> modifiedExpression.substringBefore('%').toDouble() / 100
+        '%' in modifiedExpression -> {
+            val parts = modifiedExpression.split('%')
+            parts[0].toDouble() % parts[1].toDouble()
+        }
+        else -> Expression(modifiedExpression).calculate()
+    }
 
     // Check if the result is an integer or a decimal number and return the result accordingly
     return if (result % 1 == 0.0) result.toInt().toString()
