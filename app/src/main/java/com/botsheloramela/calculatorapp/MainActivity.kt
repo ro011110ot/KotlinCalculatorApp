@@ -6,8 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -17,13 +19,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.botsheloramela.calculatorapp.ui.theme.CalculatorAppTheme
+import org.mariuszgromada.math.mxparser.Expression
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +52,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CalculatorScreen(modifier: Modifier = Modifier) {
+    var expression by remember { mutableStateOf("") }
+
+    var result by remember { mutableStateOf("") }
+
     val buttonRows = listOf(
         listOf("AC", "⌫", "÷"),
         listOf("7", "8", "9", "×"),
@@ -54,12 +66,37 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
 
     val functionButtons = setOf("AC", "⌫", "÷", "×", "+", "-", "%", "=")
 
+    val defaultOnClick: (String) -> Unit = { expression += it }
+
+    val onClickMap = mapOf(
+        "AC" to { _: String -> expression = ""; result = "" },
+        "⌫" to { _: String -> expression = delCharacter(expression) },
+        "=" to { _: String -> result = solveExpression(expression)}
+    )
+
     Column (modifier = modifier
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.background)) {
 
-        Column (modifier = Modifier.weight(1f)) {
+        Column (modifier = Modifier.weight(1f).padding(16.dp)) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = expression,
+                maxLines = 3,
+                style = TextStyle(fontSize = 48.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.End)
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
 
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = result,
+                style = TextStyle(fontSize = 48.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.End)
+            )
         }
 
         buttonRows.forEach { rowButtons ->
@@ -70,13 +107,32 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                         text = buttonText,
                         isFunction = buttonText in functionButtons,
                         modifier = modifier.weight(weight),
-                        onClick = {
-                            // Handle button click
-                        }
+                        onClick = onClickMap[buttonText] ?: defaultOnClick
                     )
                 }
             }
         }
+    }
+}
+
+fun solveExpression(expression: String): String {
+    val modifiedExpression = expression
+        .replace("×", "*")
+        .replace("÷", "/")
+        .replace("%", "#")
+
+    val result = Expression(modifiedExpression).calculate()
+
+    // Check if the result is an integer or a decimal number and return the result accordingly
+    return if (result % 1 == 0.0) result.toInt().toString()
+        else result.toString().takeIf { it != "NaN" } ?: "Error"
+}
+
+fun delCharacter(expression: String): String {
+    return if (expression.isNotEmpty()) {
+        expression.dropLast(1)
+    } else {
+        expression
     }
 }
 
