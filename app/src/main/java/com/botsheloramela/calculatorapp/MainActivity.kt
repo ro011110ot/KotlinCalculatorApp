@@ -25,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -137,6 +138,8 @@ fun CalculatorButton(
     text: String = "0",
     isFunction: Boolean = false,
     onClick: (String) -> Unit = {}) {
+
+    val tag = "button_$text"
     
     val containerColors = when {
         isFunction && (text == "AC" || text == "=") -> MaterialTheme.colorScheme.primary
@@ -145,9 +148,8 @@ fun CalculatorButton(
     }
 
     Button(modifier = modifier
-        .size(72.dp)
-        .padding(4.dp)
-        .clip(CircleShape),
+        .size(72.dp).padding(4.dp).clip(CircleShape)
+        .testTag(tag),
         onClick = { onClick(text) },
         colors = ButtonDefaults.buttonColors(containerColor = containerColors)
         ) {
